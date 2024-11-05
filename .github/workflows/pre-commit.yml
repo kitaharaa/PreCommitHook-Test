@@ -1,12 +1,47 @@
 name: pre-commit
 
 on:
+  pull_request:
   push:
-    branches: [main]
+    branches: [ develop ]
 
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Grant execute permission for the JAR
+        run: chmod +x automate_translation/automate_strings_translator.jar
+
       - name: Run Automate Translation
-        run: java -jar automate_strings_translator.jar
+        run: java -jar automate_translation/automate_strings_translator.jar
+
+      - name: Check for strings.xml changes
+        id: check_changes
+        run: |
+          if [ -n "$(git status --porcelain app/src/main/res/values-de/strings.xml)" ]; then
+            echo "Changes detected in strings.xml"
+            echo "changes_detected=true" >> $GITHUB_ENV
+          else
+            echo "No changes in strings.xml"
+            echo "changes_detected=false" >> $GITHUB_ENV
+          fi
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit changes
+        if: env.changes_detected == 'true'  # Only run if changes were detected
+        run: |
+          git add app/src/main/res/values-de/strings.xml
+          git commit -m "Update strings.xml"
+
+      - name: Push changes
+        if: env.changes_detected == 'true'  # Only run if changes were committed
+        run: git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_KEY }}
