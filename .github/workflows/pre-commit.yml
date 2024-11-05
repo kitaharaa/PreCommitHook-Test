@@ -23,8 +23,7 @@ jobs:
             echo "Changes detected in strings.xml"
           else
             echo "No changes in strings.xml"
-            exit 1
-          fi
+          fi || true
 
       - name: Configure Git user
         run: |
