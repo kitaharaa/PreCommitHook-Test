@@ -2,4 +2,5 @@
     <string name="app_name">PreCommitHook Test</string>
     <string name="testString">Test String</string>
     <string name="justString">SimpleString</string>
+    <string name="mString">mString</string>
 </resources>
