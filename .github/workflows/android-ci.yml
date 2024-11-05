@@ -33,6 +33,3 @@ jobs:
 
       - name: Run lint checks
         run: ./gradlew lint
-
-      - name: Run Automate Translation
-        run: java -jar automate_strings_translator.jar
