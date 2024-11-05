@@ -4,3 +4,5 @@ echo "
 ===================
 "
 ./gradlew ktlintFormat
+
+java -jar automate_strings_translator.jar
