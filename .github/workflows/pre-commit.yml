@@ -1,0 +1,13 @@
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Automate Translation
+        run: java -jar automate_strings_translator.jar
