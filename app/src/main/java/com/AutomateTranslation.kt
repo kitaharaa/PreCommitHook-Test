@@ -17,6 +17,7 @@ object FilePaths {
 }
 
 fun main() {
+    println("AT: started")
     val projectDir = File(FilePaths.projectDirPath)
     val sourceFile = File(projectDir, FilePaths.sourceFileDirPath)
     val targetFile = File(projectDir, FilePaths.targerFileDirPath)
@@ -25,13 +26,15 @@ fun main() {
     val stringDeDocument = parseXmlFile(targetFile)
 
     // Add missing strings to de-string.xml
-    val addedAttributesCount = addMissingStrings(stringDocument, stringDeDocument)
+    val addedAttributes = addMissingStrings(stringDocument, stringDeDocument)
 
-    if (addedAttributesCount > 0) {
+    if (addedAttributes.isNotEmpty()) {
         saveXmlFile(targetFile, stringDeDocument)
         executeGitCommand("git", "add", FilePaths.projectDirPath + FilePaths.targerFileDirPath)
     }
-    println("Added strings count: $addedAttributesCount")
+    println("Added attributes count: ${addedAttributes.size}")
+    println("Added attributes itself: $addedAttributes")
+    println("AT: ended")
 }
 
 fun getLastCommitAttributes(filePath: String): Map<String, String> {
@@ -65,7 +68,7 @@ fun Document.toElements(): List<Element> {
     }
 }
 
-fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocument: Document): Int {
+fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocument: Document): List<String> {
     val defaultLocaleElements = defaultLocaleDocument.toElements()
     val translatableLocaleElements = translatableLocaleDocument.toElements()
     val alreadyTranslatedAttributes =
@@ -73,9 +76,9 @@ fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocumen
 
     val lastCommitAddedAttributes =
         getLastCommitAttributes(FilePaths.projectDirPath + FilePaths.sourceFileDirPath)
-    if (lastCommitAddedAttributes.isEmpty()) return 0
+    if (lastCommitAddedAttributes.isEmpty()) return emptyList()
 
-    var addedAttributesCount = 0
+    val addedAttributes = mutableListOf<String>()
     // Iterate over source strings and add missing ones to the target
     defaultLocaleElements.forEach { item ->
         val itemAttribute = item.getAttribute(FilePaths.attributeName)
@@ -89,11 +92,11 @@ fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocumen
                 customNode.textContent = value
                 // Insert the custom node after the new string
                 translatableLocaleDocument.documentElement.appendChild(customNode)
-                addedAttributesCount++
+                addedAttributes.add(itemAttribute)
             }
         }
     }
-    return addedAttributesCount
+    return addedAttributes
 }
 
 fun saveXmlFile(file: File, document: Document) {
