@@ -17,6 +17,15 @@ jobs:
       - name: Run Automate Translation
         run: java -jar automate_translation/automate_strings_translator.jar
 
+      - name: Check for strings.xml changes
+        run: |
+          if [ -n "$(git status --porcelain app/src/main/res/values-de/strings.xml)" ]; then
+            echo "Changes detected in strings.xml"
+          else
+            echo "No changes in strings.xml"
+            exit 0
+          fi
+
       - name: Configure Git user
         run: |
           git config --global user.name "github-actions[bot]"
@@ -25,9 +34,9 @@ jobs:
       - name: Commit changes
         run: |
           git add app/src/main/res/values-de/strings.xml
-          git commit -m "Update de-string.xml"
+          git commit -m "Update strings.xml"
 
       - name: Push changes
         run: git push
         env:
-         GITHUB_TOKEN: ${{secrets.REPO_ACCESS_KEY}}
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_KEY }}
