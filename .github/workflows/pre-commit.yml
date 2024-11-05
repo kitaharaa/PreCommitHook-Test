@@ -2,11 +2,29 @@ name: pre-commit
 
 on:
   push:
-    branches: [main]
+    branches: [ develop ]
 
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Run Automate Translation
         run: java -jar automate_strings_translator.jar
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit changes
+        run: |
+          git add path/to/de-string.xml
+          git commit -m "Update de-string.xml"
+
+      - name: Push changes
+        run: git push
+        env:
+         GITHUB_TOKEN: ${{secrets.REPO_ACCESS_KEY}}
