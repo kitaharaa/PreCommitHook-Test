@@ -10,7 +10,7 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
 object FilePaths {
-    const val projectDirPath = "app\\src\\main\\res"
+    const val projectDirPath = "app/src/main/res"
     const val sourceFileDirPath = "/values/strings.xml"
     const val targerFileDirPath = "/values-de/strings.xml"
     const val attributeName = "name"
@@ -25,16 +25,16 @@ fun main() {
     val stringDeDocument = parseXmlFile(targetFile)
 
     // Add missing strings to de-string.xml
-    val addedTranslatedAttributesCount = addMissingStrings(stringDocument, stringDeDocument)
+    val addedAttributesCount = addMissingStrings(stringDocument, stringDeDocument)
 
-    if (addedTranslatedAttributesCount > 0) {
+    if (addedAttributesCount > 0) {
         saveXmlFile(targetFile, stringDeDocument)
         executeGitCommand("git", "add", FilePaths.projectDirPath + FilePaths.targerFileDirPath)
     }
-    println("Added strings count: $addedTranslatedAttributesCount")
+    println("Added strings count: $addedAttributesCount")
 }
 
-fun getLastCommitAddedAttributes(filePath: String): Set<String> {
+fun getLastCommitAttributes(filePath: String): Map<String, String> {
     val process = executeGitCommand("git", "diff", "HEAD~1", "HEAD", "--", filePath)
     val output = process.inputStream.bufferedReader().readText()
     process.waitFor()
@@ -44,9 +44,12 @@ fun getLastCommitAddedAttributes(filePath: String): Set<String> {
         .filter { it.startsWith("+") && !it.startsWith("++") } // TODO handle "++" case
         .mapNotNull { line ->
             // Extract the "name" attribute from the added lines
-            Regex("""name="([^"]+)"""").find(line)?.groups?.get(1)?.value
-        }
-        .toSet()
+            val name = Regex("""name="([^"]+)"""").find(line)?.groups?.get(1)?.value
+            val content = Regex(""">(.+)<""").find(line)?.groups?.get(1)?.value
+            if (name == null || content == null) return@mapNotNull null
+
+            name to content + "_modified"
+        }.toMap()
 }
 
 fun parseXmlFile(file: File): Document {
@@ -69,7 +72,7 @@ fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocumen
         translatableLocaleElements.map { it.getAttribute(FilePaths.attributeName) }.toSet()
 
     val lastCommitAddedAttributes =
-        getLastCommitAddedAttributes(FilePaths.projectDirPath + FilePaths.sourceFileDirPath)
+        getLastCommitAttributes(FilePaths.projectDirPath + FilePaths.sourceFileDirPath)
     if (lastCommitAddedAttributes.isEmpty()) return 0
 
     var addedAttributesCount = 0
@@ -77,10 +80,17 @@ fun addMissingStrings(defaultLocaleDocument: Document, translatableLocaleDocumen
     defaultLocaleElements.forEach { item ->
         val itemAttribute = item.getAttribute(FilePaths.attributeName)
 
-        if (itemAttribute !in alreadyTranslatedAttributes && itemAttribute in lastCommitAddedAttributes) {
-            val newString = translatableLocaleDocument.importNode(item, true)
-            translatableLocaleDocument.documentElement.appendChild(newString)
-            addedAttributesCount++
+        if (itemAttribute !in alreadyTranslatedAttributes && itemAttribute in lastCommitAddedAttributes.keys) {
+            val customNode = translatableLocaleDocument.createElement("string")
+            customNode.setAttribute(FilePaths.attributeName, itemAttribute) // Set any attributes as needed
+            // Optionally, you can also add some text content to the custom node
+            val value = lastCommitAddedAttributes[itemAttribute]
+            if (value.isNullOrBlank().not()) {
+                customNode.textContent = value
+                // Insert the custom node after the new string
+                translatableLocaleDocument.documentElement.appendChild(customNode)
+                addedAttributesCount++
+            }
         }
     }
     return addedAttributesCount
