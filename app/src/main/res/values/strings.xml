@@ -3,4 +3,5 @@
     <string name="testString">Test String</string>
     <string name="justString">SimpleString</string>
     <string name="mString">mString</string>
+    <string name="s_string">s_string</string>
 </resources>
