@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PreCommitHook Test</string>
+    <string name="hookTest">This value should be modified</string>
 </resources>
