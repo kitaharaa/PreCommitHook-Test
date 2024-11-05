@@ -24,7 +24,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add path/to/de-string.xml
+          git add app/src/main/res/values-de/strings.xml
           git commit -m "Update de-string.xml"
 
       - name: Push changes
