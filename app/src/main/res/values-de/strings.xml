@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    
+      
+  
   <string name="app_name">PreCommitHook Test</string>
+  
+  <string name="testString">Test String_modified</string>
+  <string name="justString">SimpleString_modified</string>
+  <string name="mString">mString_modified</string>
+  <string name="s_string">s_string_modified</string>
+  <string name="testString1">Test_modified</string>
+  <string name="testString2">Test_modified</string>
+  <string name="testString3">Test_modified</string>
+  <string name="testString4">Test_modified</string>
+  <string name="asdasd">Test_modified</string>
+  <string name="qerqwer">Test_modified</string>
+  <string name="xvzxcvzxcvzxcv">Test_modified</string>
+  <string name="qko">Test_modified</string>
+  <string name="qkoadsadsaodiaspodoiapds">Test111_modified</string>
+  <string name="qkoadsadsaodiaspodoiapdssss">Test1112_modified</string>
 </resources>
