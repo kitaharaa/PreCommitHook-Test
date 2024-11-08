@@ -32,3 +32,6 @@ jobs:
       - name: Commit changes
         run: |
           git add app/src/main/res/values-de/strings.xml
+
+      - name: Verify content of strings.xml (debugging)
+        run: cat app/src/main/res/values-de/strings.xml
