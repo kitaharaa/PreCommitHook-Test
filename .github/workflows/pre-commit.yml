@@ -32,6 +32,7 @@ jobs:
       - name: Commit changes
         run: |
           git add app/src/main/res/values-de/strings.xml
+          git commit -m "Add missing translations"
 
       - name: Check Git Status (pre push)
         run: git status
