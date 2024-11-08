@@ -2,6 +2,7 @@ name: pre-commit
 
 on:
   pull_request:
+  push:
     branches: [ develop ]
 
 jobs:
@@ -11,16 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
+
       - name: Grant execute permission for the JAR
         run: chmod +x automate_translation/automate_strings_translator.jar
 
       - name: Run Automate Translation
         run: java -jar automate_translation/automate_strings_translator.jar
-
-      - name: Configure Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit changes
         run: |
