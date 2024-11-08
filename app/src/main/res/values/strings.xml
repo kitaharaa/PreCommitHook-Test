@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PreCommitHook Test</string>
+    <string name="test">PreCommitHook Test__should be modified</string>
 </resources>
