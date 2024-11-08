@@ -33,5 +33,9 @@ jobs:
         run: |
           git add app/src/main/res/values-de/strings.xml
 
+      - name: Push changes
+        run: |
+          git push || echo "No changes to push"
+
       - name: Verify content of strings.xml (debugging)
         run: cat app/src/main/res/values-de/strings.xml
