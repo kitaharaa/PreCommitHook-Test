@@ -1,10 +1,4 @@
 <resources>
     <string name="app_name">PreCommitHook Test</string>
-    <string name="testString">Test String</string>
-    <string name="justString">SimpleString</string>
-    <string name="mString">mString</string>
-    <string name="s_string">s_string</string>
-    <string name="testString1">Test</string>
-    <string name="testString2">Test</string>
-    <string name="testString3">Test</string>
+    <string name="test">PreCommitHook Test__should be modified</string>
 </resources>

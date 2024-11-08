@@ -1,6 +1,7 @@
 name: VTest CI
 
 on:
+  # Run on events
   push:
     branches:
       - master
@@ -8,10 +9,12 @@ on:
     branches:
       - master
 
+# A bunch of tasks to do
 jobs:
   build:
+    # Runner
     runs-on: ubuntu-latest
-
+    # Actions
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

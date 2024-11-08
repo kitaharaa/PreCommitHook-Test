@@ -2,7 +2,12 @@ name: pre-commit
 
 on:
   pull_request:
+  push:
     branches: [ develop ]
+
+
+permissions:
+  contents: write  # Grants write permission to update files if needed
 
 jobs:
   pre-commit:
@@ -10,6 +15,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" 
 
       - name: Grant execute permission for the JAR
         run: chmod +x automate_translation/automate_strings_translator.jar
@@ -17,11 +29,20 @@ jobs:
       - name: Run Automate Translation
         run: java -jar automate_translation/automate_strings_translator.jar
 
-      - name: Configure Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Commit changes
         run: |
           git add app/src/main/res/values-de/strings.xml
+          git commit -m "Add missing translations"
+
+      - name: Check Git Status (pre push)
+        run: git status
+
+      - name: Push changes
+        run: |
+          git push || echo "No changes to push"
+
+      - name: Check Git Status (after push)
+        run: git status
+
+      - name: Verify content of strings.xml (debugging)
+        run: cat app/src/main/res/values-de/strings.xml
