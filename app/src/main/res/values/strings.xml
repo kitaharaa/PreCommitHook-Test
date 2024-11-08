@@ -1,18 +1,3 @@
 <resources>
     <string name="app_name">PreCommitHook Test</string>
-    <string name="testString">Test String</string>
-    <string name="justString">SimpleString</string>
-    <string name="mString">mString</string>
-    <string name="s_string">s_string</string>
-    <string name="testString1">Test</string>
-    <string name="testString2">Test</string>
-    <string name="testString3">Test</string>
-    <string name="testString4">Test</string>
-    <string name="asdasd">Test</string>
-    <string name="qerqwer">Test</string>
-    <string name="xvzxcvzxcvzxcv">Test</string>
-    <string name="qko">Test</string>
-    <string name="qkoadsadsaodiaspodoiapds">Test111</string>
-    <string name="qkoadsadsaodiaspodoiapdssss">Test1112</string>
-    <string name="newTestString">newTestString</string>
 </resources>
