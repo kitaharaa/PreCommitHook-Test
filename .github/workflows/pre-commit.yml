@@ -5,12 +5,18 @@ on:
   push:
     branches: [ develop ]
 
+
+permissions:
+  contents: write  # Grants write permission to update files if needed
+
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
       - name: Configure Git user
         run: |
